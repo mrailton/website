@@ -17,4 +17,15 @@ export default defineNuxtConfig({
     modules: [
         '@nuxt/content',
     ],
+    content: {
+        build: {
+            markdown: {
+                highlight: {
+                    theme: {
+                        default: 'dracula'
+                    }
+                }
+            }
+        }
+    }
 });
