@@ -50,6 +50,6 @@ p {
     background: #718096;
 }
 
-.router-link-active {
+.nav-active {
     @apply bg-white text-indigo-600;
 }
