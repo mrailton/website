@@ -1,22 +1,6 @@
 <script setup lang="ts">
 defineProps(['article']);
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat("en-GB", {
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  }).format(date).replace(/\b(\d{1,2})\b/, (d) => `${d}${getOrdinal(d)}`);
-};
-
-const getOrdinal = (day) => {
-  const suffixes = ["th", "st", "nd", "rd"];
-  const v = day % 100;
-  return suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0];
-};
-
-console.log('article')
+const {formatDate} = useDateFormatter();
 </script>
 
 <template>
@@ -32,7 +16,3 @@ console.log('article')
     </div>
   </NuxtLink>
 </template>
-
-<style scoped>
-
-</style>
