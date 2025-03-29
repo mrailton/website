@@ -1,9 +1,9 @@
 <script setup lang="ts">
 const route = useRoute();
-let showMenu = false
+let showMenu = ref(false)
 
 function toggleMenu() {
-  showMenu = !showMenu;
+  showMenu.value = !showMenu.value;
 }
 
 const isPageBlog = computed(() => route.path.startsWith("/blog"));
@@ -38,7 +38,3 @@ const isPageIndex = computed(() => route.path === '/');
     </nav>
   </header>
 </template>
-
-<style scoped>
-
-</style>
