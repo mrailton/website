@@ -1,0 +1,17 @@
+{{define "title"}}View Article{{end}}
+
+{{define "main"}}
+    {{with .Article}}
+        <section>
+            <div class="max-w-4xl px-6 pb-20 mx-auto">
+                <h1 class="text-3xl font-semibold text-gray-800 mb-4">{{ .Title }}</h1>
+                <span
+                        class="block text-gray-600 font-light text-sm mb-8">Posted: {{ humanDate .PublishedAt }}</span>
+                <div class="prose lg:prose-xl">
+                    {{markdown .Content}}
+                </div>
+            </div>
+        </section>
+
+    {{end}}
+{{end}}

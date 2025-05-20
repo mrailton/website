@@ -6,12 +6,14 @@ import (
 	"html/template"
 	"io/fs"
 	"log/slog"
-	"markrailton.com/internal/data"
 	"net/http"
 	"os"
 	"path/filepath"
 	"time"
 
+	"github.com/russross/blackfriday"
+
+	"markrailton.com/internal/data"
 	"markrailton.com/ui"
 )
 
@@ -20,6 +22,7 @@ type templateData struct {
 	Flash           string
 	IsAuthenticated bool
 	Articles        []data.Article
+	Article         data.Article
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -50,6 +53,11 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	return cache, nil
 }
 
+func markDowner(args ...interface{}) template.HTML {
+	s := blackfriday.MarkdownCommon([]byte(fmt.Sprintf("%s", args...)))
+	return template.HTML(s)
+}
+
 func humanDateTime(t time.Time) string {
 	if t.IsZero() {
 		return ""
@@ -69,6 +77,7 @@ func humanDate(t time.Time) string {
 var functions = template.FuncMap{
 	"humanDate":     humanDate,
 	"humanDateTime": humanDateTime,
+	"markdown":      markDowner,
 }
 
 func (app *application) newTemplateData(r *http.Request) templateData {

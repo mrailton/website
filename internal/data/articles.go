@@ -2,6 +2,7 @@ package data
 
 import (
 	"database/sql"
+	"errors"
 	"time"
 )
 
@@ -51,4 +52,26 @@ func (m *ArticleModel) Latest() []Article {
 	}
 
 	return articles
+}
+
+func (m *ArticleModel) GetBySlug(slug string) (Article, error) {
+	var article Article
+
+	query := `
+		SELECT slug, title, content, published_at
+		FROM articles
+		WHERE slug = $1
+		AND published_at < NOW()
+	`
+
+	err := m.DB.QueryRow(query, slug).Scan(&article.Slug, &article.Title, &article.Content, &article.PublishedAt)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return Article{}, ErrRecordNotFound
+		} else {
+			return Article{}, err
+		}
+	}
+
+	return article, nil
 }
