@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io/fs"
 	"log/slog"
+	"markrailton.com/internal/data"
 	"net/http"
 	"os"
 	"path/filepath"
@@ -18,6 +19,7 @@ type templateData struct {
 	CurrentYear     int
 	Flash           string
 	IsAuthenticated bool
+	Articles        []data.Article
 }
 
 func newTemplateCache() (map[string]*template.Template, error) {
@@ -37,7 +39,7 @@ func newTemplateCache() (map[string]*template.Template, error) {
 			page,
 		}
 
-		ts, err := template.New(name).ParseFS(ui.Files, patterns...)
+		ts, err := template.New(name).Funcs(functions).ParseFS(ui.Files, patterns...)
 		if err != nil {
 			return nil, err
 		}
@@ -46,6 +48,27 @@ func newTemplateCache() (map[string]*template.Template, error) {
 	}
 
 	return cache, nil
+}
+
+func humanDateTime(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+
+	return t.UTC().Format("2 Jan 2006 at 15:04")
+}
+
+func humanDate(t time.Time) string {
+	if t.IsZero() {
+		return ""
+	}
+
+	return t.UTC().Format("2 Jan 2006")
+}
+
+var functions = template.FuncMap{
+	"humanDate":     humanDate,
+	"humanDateTime": humanDateTime,
 }
 
 func (app *application) newTemplateData(r *http.Request) templateData {
