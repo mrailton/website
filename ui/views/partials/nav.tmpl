@@ -35,9 +35,11 @@
                         <a href="/blog">Articles</a>
                     </li>
 
+                    {{if .IsAuthenticated}}
                     <li class="px-3 cursor-pointer hover:bg-white flex items-center hover:text-indigo-600" :class="showMenu && 'py-1'">
                         <a href="/admin">Admin</a>
                     </li>
+                    {{end}}
                 </ul>
             </div>
         </nav>
