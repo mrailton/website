@@ -5,10 +5,13 @@ import (
 	"fmt"
 	"html/template"
 	"io/fs"
-	"markrailton.com/ui"
+	"log/slog"
 	"net/http"
+	"os"
 	"path/filepath"
 	"time"
+
+	"markrailton.com/ui"
 )
 
 type templateData struct {
@@ -71,4 +74,14 @@ func (app *application) render(w http.ResponseWriter, r *http.Request, status in
 	w.WriteHeader(status)
 
 	buf.WriteTo(w)
+}
+
+func loadTemplateCache(logger *slog.Logger) map[string]*template.Template {
+	templateCache, err := newTemplateCache()
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
+
+	return templateCache
 }
